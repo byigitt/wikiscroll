@@ -223,12 +223,19 @@ html, body {
     z-index: 100;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    opacity: 0.4;
-    transition: opacity 0.2s, transform 0.2s;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 6px;
+    gap: 2px;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
-.side-nav:hover { opacity: 1; }
+.side-nav:hover {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.1);
+}
 
 .side-nav.hidden {
     opacity: 0;
@@ -237,34 +244,40 @@ html, body {
 }
 
 .nav-btn {
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
+    background: transparent;
     border: none;
-    color: var(--text);
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     padding: 12px;
-    border-radius: 50%;
-    transition: all 0.2s;
+    border-radius: 10px;
+    transition: all 0.15s;
     position: relative;
 }
 
 .nav-btn .icon {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     stroke-linecap: round;
     stroke-linejoin: round;
-    opacity: 0.9;
+    opacity: 0.7;
+}
+
+.side-nav:hover .nav-btn {
+    color: #1a1a1a;
 }
 
 .nav-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.1);
+    background: rgba(0, 0, 0, 0.08);
 }
 
-.nav-btn:active { transform: scale(0.95); }
+.nav-btn:hover .icon {
+    opacity: 1;
+}
+
+.nav-btn:active { transform: scale(0.92); }
 
 
 
@@ -277,9 +290,9 @@ html, body {
     transform: translateY(-50%);
     margin-right: 12px;
     padding: 8px 12px;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    color: var(--text);
+    color: #1a1a1a;
     font-size: 0.75rem;
     font-weight: 500;
     white-space: nowrap;
@@ -288,6 +301,7 @@ html, body {
     visibility: hidden;
     transition: all 0.15s;
     pointer-events: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .nav-btn:hover::before {
@@ -300,14 +314,30 @@ html, body {
 .nav-btn.liked .icon-outline,
 .nav-btn.saved .icon-outline { display: none; }
 
+.nav-btn.liked {
+    color: #ff6b7a;
+}
+
+.side-nav:hover .nav-btn.liked {
+    color: #e84057;
+}
+
 .nav-btn.liked .icon-filled,
 .nav-btn.saved .icon-filled {
     display: block;
     opacity: 1;
 }
 
-#notInterestedBtn .icon { opacity: 0.5; }
-#notInterestedBtn:active .icon { opacity: 0.8; }
+.nav-btn.saved {
+    color: #ffc107;
+}
+
+.side-nav:hover .nav-btn.saved {
+    color: #f59f00;
+}
+
+#notInterestedBtn .icon { opacity: 0.4; }
+#notInterestedBtn:hover .icon { opacity: 0.7; }
 
 .scroll-hint {
     position: fixed;
@@ -638,9 +668,9 @@ html, body {
     .card-inner { max-width: 500px; }
     .card-fact { font-size: 1.7rem; }
     .card-thumbnail { width: 240px; height: 240px; }
-    .side-nav { right: 20px; gap: 12px; }
-    .nav-btn { padding: 14px; }
-    .nav-btn .icon { width: 24px; height: 24px; }
+    .side-nav { right: 20px; border-radius: 18px; padding: 8px; }
+    .nav-btn { padding: 13px; }
+    .nav-btn .icon { width: 22px; height: 22px; }
 }
 
 @media (min-width: 768px) {
@@ -648,9 +678,9 @@ html, body {
     .card-inner { max-width: 600px; }
     .card-fact { font-size: 1.9rem; -webkit-line-clamp: 6; }
     .card-thumbnail { width: 280px; height: 280px; border-radius: 20px; }
-    .side-nav { right: 32px; gap: 14px; }
-    .nav-btn { padding: 16px; }
-    .nav-btn .icon { width: 26px; height: 26px; }
+    .side-nav { right: 32px; border-radius: 20px; padding: 8px; gap: 4px; }
+    .nav-btn { padding: 14px; border-radius: 12px; }
+    .nav-btn .icon { width: 24px; height: 24px; }
     .scroll-next-btn { display: flex; }
 }
 
