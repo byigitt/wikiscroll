@@ -193,12 +193,13 @@ html, body {
 .side-nav {
     position: fixed;
     right: 16px;
-    bottom: 32px;
+    top: 25%;
+    transform: translateY(-50%);
     z-index: 100;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    opacity: 0.5;
+    gap: 10px;
+    opacity: 0.4;
     transition: opacity 0.2s, transform 0.2s;
 }
 
@@ -206,7 +207,7 @@ html, body {
 
 .side-nav.hidden {
     opacity: 0;
-    transform: translateX(20px);
+    transform: translateY(-50%) translateX(20px);
     pointer-events: none;
 }
 
@@ -577,7 +578,7 @@ html, body {
     .card-inner { max-width: 500px; }
     .card-fact { font-size: 1.7rem; }
     .card-thumbnail { width: 240px; height: 240px; }
-    .side-nav { right: 20px; bottom: 40px; gap: 14px; }
+    .side-nav { right: 20px; gap: 12px; }
     .nav-btn { padding: 14px; }
     .nav-btn .icon { width: 24px; height: 24px; }
 }
@@ -587,7 +588,7 @@ html, body {
     .card-inner { max-width: 600px; }
     .card-fact { font-size: 1.9rem; -webkit-line-clamp: 6; }
     .card-thumbnail { width: 280px; height: 280px; border-radius: 20px; }
-    .side-nav { right: 32px; bottom: 48px; gap: 16px; }
+    .side-nav { right: 32px; gap: 14px; }
     .nav-btn { padding: 16px; }
     .nav-btn .icon { width: 26px; height: 26px; }
 }
