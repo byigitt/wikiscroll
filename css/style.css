@@ -193,8 +193,7 @@ html, body {
 .side-nav {
     position: fixed;
     right: 16px;
-    top: 25%;
-    transform: translateY(-50%);
+    top: 80px;
     z-index: 100;
     display: flex;
     flex-direction: column;
@@ -207,7 +206,7 @@ html, body {
 
 .side-nav.hidden {
     opacity: 0;
-    transform: translateY(-50%) translateX(20px);
+    transform: translateX(20px);
     pointer-events: none;
 }
 
@@ -220,10 +219,18 @@ html, body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    padding: 14px;
+    padding: 12px;
     border-radius: 50%;
     transition: all 0.2s;
     position: relative;
+}
+
+.nav-btn .icon {
+    width: 22px;
+    height: 22px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.9;
 }
 
 .nav-btn:hover {
@@ -233,13 +240,7 @@ html, body {
 
 .nav-btn:active { transform: scale(0.95); }
 
-.nav-btn .icon {
-    width: 24px;
-    height: 24px;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    opacity: 0.9;
-}
+
 
 /* Tooltip */
 .nav-btn::before {
