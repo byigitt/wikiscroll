@@ -10,7 +10,6 @@
 </head>
 <body>
     <div id="app">
-        <!-- Header -->
         <header class="header">
             <div class="logo">wikiscroll<span>.</span></div>
             <div class="header-right">
@@ -19,14 +18,14 @@
                         <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
                     </svg>
                 </button>
-                <button class="header-btn" id="infoBtn" title="Hakkında">
+                <button class="header-btn" id="infoBtn" title="Hakkinda">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                         <circle cx="12" cy="12" r="10"/>
                         <path d="M12 16v-4"/>
                         <path d="M12 8h.01"/>
                     </svg>
                 </button>
-                <button class="header-btn" id="resetBtn" title="Sıfırla">
+                <button class="header-btn" id="resetBtn" title="Sifirla">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                         <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                         <path d="M3 3v5h5"/>
@@ -39,12 +38,8 @@
             </div>
         </header>
 
-        <!-- Cards Container -->
-        <main class="cards-container" id="cardsContainer">
-            <!-- Cards will be injected here -->
-        </main>
+        <main class="cards-container" id="cardsContainer"></main>
 
-        <!-- Bottom Actions -->
         <nav class="bottom-nav">
             <button class="nav-btn" id="likeBtn">
                 <svg class="icon icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -53,7 +48,7 @@
                 <svg class="icon icon-filled" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                 </svg>
-                <span class="label">Beğen</span>
+                <span class="label">Begen</span>
             </button>
             <button class="nav-btn" id="saveBtn">
                 <svg class="icon icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -70,7 +65,7 @@
                     <polyline points="16 6 12 2 8 6"/>
                     <line x1="12" y1="2" x2="12" y2="15"/>
                 </svg>
-                <span class="label">Paylaş</span>
+                <span class="label">Paylas</span>
             </button>
             <button class="nav-btn" id="sourceBtn">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -82,34 +77,31 @@
             </button>
         </nav>
 
-        <!-- Scroll Hint -->
         <div class="scroll-hint" id="scrollHint">
-            <span>↑ Kaydır</span>
+            <span>^ Kaydir</span>
         </div>
 
-        <!-- Reset Modal -->
         <div class="modal-overlay" id="resetModal">
             <div class="modal">
-                <div class="modal-title">Sıfırla</div>
-                <div class="modal-text">Tüm tercihler ve beğeniler sıfırlansın mı?</div>
+                <div class="modal-title">Sifirla</div>
+                <div class="modal-text">Tum tercihler ve begeniler sifirlansin mi?</div>
                 <div class="modal-actions">
-                    <button class="modal-btn modal-cancel" id="modalCancel">Vazgeç</button>
-                    <button class="modal-btn modal-confirm" id="modalConfirm">Sıfırla</button>
+                    <button class="modal-btn modal-cancel" id="modalCancel">Vazgec</button>
+                    <button class="modal-btn modal-confirm" id="modalConfirm">Sifirla</button>
                 </div>
             </div>
         </div>
 
-        <!-- Info Modal -->
         <div class="modal-overlay" id="infoModal">
             <div class="modal modal-info">
                 <div class="modal-title">wikiscroll.</div>
                 <div class="modal-text">
-                    Wikipedia'dan rastgele bilgiler sunan, TikTok tarzı kaydırmalı bir bilgi platformu.
+                    Wikipedia'dan rastgele bilgiler sunan, TikTok tarzi kaydirmali bir bilgi platformu.
                     <br><br>
-                    Beğendikçe algoritma seni tanır ve ilgi alanlarına göre içerik önerir.
+                    Begendikce algoritma seni tanir ve ilgi alanlarina gore icerik onerir.
                 </div>
                 <div class="modal-author">
-                    Yapımcı: <a href="https://bayburt.lu" target="_blank" rel="noopener">Barış Bayburtlu</a>
+                    Yapimci: <a href="https://bayburt.lu" target="_blank" rel="noopener">Baris Bayburtlu</a>
                 </div>
                 <div class="modal-links">
                     <a href="https://github.com/byigitt/wikiscroll" target="_blank" rel="noopener">
@@ -127,7 +119,6 @@
             </div>
         </div>
 
-        <!-- Saved Modal -->
         <div class="modal-overlay" id="savedModal">
             <div class="modal modal-saved">
                 <div class="modal-header">
@@ -139,9 +130,7 @@
                         </svg>
                     </button>
                 </div>
-                <div class="saved-list" id="savedList">
-                    <!-- Saved items will be injected here -->
-                </div>
+                <div class="saved-list" id="savedList"></div>
             </div>
         </div>
     </div>

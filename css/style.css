@@ -36,7 +36,6 @@ html, body {
     flex-direction: column;
 }
 
-/* Header */
 .header {
     position: fixed;
     top: 0;
@@ -115,7 +114,6 @@ html, body {
     color: var(--bg);
 }
 
-/* Cards Container */
 .cards-container {
     flex: 1;
     overflow-y: scroll;
@@ -129,7 +127,6 @@ html, body {
     display: none;
 }
 
-/* Card */
 .card {
     height: 100vh;
     height: 100dvh;
@@ -201,7 +198,6 @@ html, body {
     text-overflow: ellipsis;
 }
 
-/* Bottom Navigation */
 .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -249,31 +245,21 @@ html, body {
     font-weight: 500;
 }
 
-/* Like button icons */
 .nav-btn .icon-filled {
     display: none;
 }
 
-.nav-btn.liked .icon-outline {
-    display: none;
-}
-
-.nav-btn.liked .icon-filled {
-    display: block;
-    opacity: 1;
-}
-
-/* Save button */
+.nav-btn.liked .icon-outline,
 .nav-btn.saved .icon-outline {
     display: none;
 }
 
+.nav-btn.liked .icon-filled,
 .nav-btn.saved .icon-filled {
     display: block;
     opacity: 1;
 }
 
-/* Scroll Hint */
 .scroll-hint {
     position: fixed;
     bottom: 130px;
@@ -297,7 +283,6 @@ html, body {
     display: none;
 }
 
-/* Like Animation */
 .like-burst {
     position: fixed;
     pointer-events: none;
@@ -325,7 +310,6 @@ html, body {
     100% { opacity: 0; transform: scale(1.2); }
 }
 
-/* Spinner */
 .spinner {
     width: 40px;
     height: 40px;
@@ -339,7 +323,6 @@ html, body {
     to { transform: rotate(360deg); }
 }
 
-/* Tablet */
 @media (min-width: 480px) {
     .card { padding: 90px 32px 130px; }
     .card-inner { max-width: 480px; }
@@ -347,7 +330,6 @@ html, body {
     .card-thumbnail { width: 240px; height: 240px; }
 }
 
-/* Desktop */
 @media (min-width: 768px) {
     .card-inner { max-width: 560px; }
     .card-fact { font-size: 1.75rem; -webkit-line-clamp: 6; }
@@ -357,7 +339,6 @@ html, body {
     .scroll-hint { bottom: 140px; }
 }
 
-/* Modal */
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -438,7 +419,6 @@ html, body {
     transform: scale(0.97);
 }
 
-/* Info Modal */
 .modal-info .modal-title {
     font-size: 1.25rem;
     margin-bottom: 16px;
@@ -498,7 +478,6 @@ html, body {
     height: 18px;
 }
 
-/* Saved Modal */
 .modal-saved {
     max-width: 400px;
     max-height: 80vh;
@@ -605,7 +584,6 @@ html, body {
     color: #ef4444;
 }
 
-/* Safe areas */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
     .bottom-nav { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
     .header { padding-top: calc(16px + env(safe-area-inset-top)); }
