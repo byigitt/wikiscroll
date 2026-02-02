@@ -200,6 +200,14 @@ wikiscroll/
 
 ---
 
+## Inspiration / İlham
+
+This project was inspired by [@rebane2001](https://x.com/rebane2001)'s [TikTok-style Wikipedia concept](https://x.com/rebane2001/status/2018107789512474738). While the original used pre-compiled data, wikiscroll. fetches real-time content directly from Wikipedia's API.
+
+Bu proje [@rebane2001](https://x.com/rebane2001)'in [TikTok tarzı Wikipedia konseptinden](https://x.com/rebane2001/status/2018107789512474738) ilham almıştır. Orijinal proje önceden derlenmiş veri kullanırken, wikiscroll. içerikleri doğrudan Wikipedia API'sinden anlık olarak çeker.
+
+---
+
 ## License / Lisans
 
 MIT
