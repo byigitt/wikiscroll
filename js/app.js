@@ -43,18 +43,29 @@ const App = {
                 const cached = Storage.getCache(this.language);
                 console.log('Cache result:', cached ? `${cached.length} articles` : 'null/expired');
                 
-                if (cached && cached.length >= count) {
-                    const sorted = Recommender.recommend(cached.slice(0, count));
-                    this.facts.push(...sorted);
-                    console.log(`✅ Loaded ${sorted.length} from CACHE. Total: ${this.facts.length}`);
-                    this.isLoading = false;
+                if (cached && cached.length > 0) {
+                    // Filter out already seen articles
+                    const seen = Storage.getSeen();
+                    const unseen = cached.filter(a => !seen.includes(a.id));
+                    console.log(`Unseen articles: ${unseen.length}/${cached.length}`);
                     
-                    // Fetch new in background
-                    this.fetchAndCache(count);
-                    return;
-                } else {
-                    console.log('Cache miss or not enough articles, fetching from API...');
+                    if (unseen.length >= count) {
+                        const sorted = Recommender.recommend(unseen.slice(0, count));
+                        this.facts.push(...sorted);
+                        console.log(`✅ Loaded ${sorted.length} from CACHE (unseen). Total: ${this.facts.length}`);
+                        this.isLoading = false;
+                        
+                        // Fetch new in background
+                        this.fetchAndCache(count);
+                        return;
+                    } else if (unseen.length > 0) {
+                        // Use what we have, then fetch more
+                        const sorted = Recommender.recommend(unseen);
+                        this.facts.push(...sorted);
+                        console.log(`✅ Loaded ${sorted.length} unseen from CACHE, need more...`);
+                    }
                 }
+                console.log('Cache miss or not enough unseen articles, fetching from API...');
             }
             
             // Fetch from API
@@ -64,7 +75,12 @@ const App = {
                 this.facts.length === 0 ? WikiAPI.getOnThisDay(this.language) : Promise.resolve([])
             ]);
             
-            const newFacts = [...articles, ...onThisDay.slice(0, 2)].filter(Boolean);
+            // Filter out already seen
+            const seen = Storage.getSeen();
+            const currentIds = this.facts.map(f => f.id);
+            const newFacts = [...articles, ...onThisDay.slice(0, 2)]
+                .filter(Boolean)
+                .filter(a => !seen.includes(a.id) && !currentIds.includes(a.id));
             console.log(`Fetched ${newFacts.length} articles from API`);
             
             // Save to cache
