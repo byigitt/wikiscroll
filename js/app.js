@@ -109,10 +109,15 @@ const App = {
         };
 
         const thumbnail = fact.thumbnail
-            ? `<img src="${fact.thumbnail}" class="card-thumbnail" alt="" onerror="this.remove()">`
+            ? `<img src="${fact.thumbnail}" class="card-thumbnail" alt="" onerror="this.parentElement.parentElement.querySelector('.card-bg')?.remove(); this.remove()">`
+            : '';
+
+        const bgImage = fact.thumbnail
+            ? `<div class="card-bg" style="background-image: url('${fact.thumbnail}')"></div>`
             : '';
 
         card.innerHTML = `
+            ${bgImage}
             <div class="card-inner">
                 ${thumbnail}
                 <div class="card-emoji">${fact.emoji || '💡'}</div>

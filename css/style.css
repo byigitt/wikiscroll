@@ -131,6 +131,30 @@ html, body {
     justify-content: center;
     align-items: center;
     padding: 80px 24px 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-bg {
+    position: absolute;
+    top: 70px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    background-size: cover;
+    background-position: center;
+    filter: blur(40px) saturate(1.2);
+    opacity: 0.25;
+    transform: scale(1.1);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.card-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, var(--bg) 70%);
 }
 
 .card-inner {
@@ -140,6 +164,8 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    z-index: 1;
 }
 
 .card-thumbnail {
