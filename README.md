@@ -22,10 +22,18 @@ WikiScroll transforms Wikipedia content into bite-sized, scrollable facts. Inste
 - Direct links to Wikipedia source articles
 
 **Recommendation System**
-- Learns your interests based on reading time and likes
-- Prioritizes categories you engage with more
-- Maintains diversity to help you discover new topics
-- All preferences stored locally in your browser
+- Custom-built algorithm that learns your interests over time
+- Time decay: older preferences gradually lose influence (half-life: 7 days)
+- Weighted scoring system:
+  - Like: +10 points
+  - Save: +8 points
+  - Long read (5s+): +3 points
+  - Quick skip: -2 points
+  - "Not interested": -15 points
+- Category and tag-level granularity
+- Session awareness: tracks last 20 viewed items to enforce variety
+- Diversity control: prevents same category appearing more than twice consecutively
+- All preference data stored locally, never sent to any server
 
 **Offline-First Caching**
 - Articles are cached locally for instant loading
@@ -49,10 +57,16 @@ Your data never leaves your device. If you clear your browser data, everything r
 ### How It Works
 
 1. On first load, WikiScroll fetches random articles from Wikipedia
-2. Articles are filtered for quality (removes stubs, disambiguation pages, etc.)
+2. Articles are filtered for quality (removes stubs, disambiguation pages, boring location entries)
 3. Content is trimmed to 1-2 sentences for quick consumption
-4. As you scroll and interact, the app learns your preferences
-5. Future content is weighted toward your interests while maintaining variety
+4. As you scroll, the algorithm tracks your reading time per article
+5. Quick skips signal disinterest, longer reads signal engagement
+6. Likes and saves provide strong positive signals for category preferences
+7. "Not interested" button provides explicit negative feedback (-15 points)
+8. The recommendation engine scores new articles based on your accumulated preferences
+9. Time decay ensures recent interactions matter more than old ones
+10. A diversity factor ensures you still discover content outside your comfort zone
+11. All articles are cached locally for offline access and faster subsequent loads
 
 ### Tech Stack
 
@@ -105,10 +119,18 @@ WikiScroll, Wikipedia içeriklerini kısa ve kaydırmalı bilgi kartlarına dön
 - Wikipedia kaynak makalelerine doğrudan bağlantılar
 
 **Öneri Sistemi**
-- Okuma süresi ve beğenilere göre ilgi alanlarınızı öğrenir
-- Daha çok etkileşimde bulunduğunuz kategorilere öncelik verir
-- Yeni konular keşfetmeniz için çeşitlilik sağlar
-- Tüm tercihler tarayıcınızda yerel olarak saklanır
+- Zamanla ilgi alanlarınızı öğrenen özel yapım algoritma
+- Zaman azalması: eski tercihler kademeli olarak etkisini kaybeder (yarı ömür: 7 gün)
+- Ağırlıklı puanlama sistemi:
+  - Beğeni: +10 puan
+  - Kaydetme: +8 puan
+  - Uzun okuma (5sn+): +3 puan
+  - Hızlı geçiş: -2 puan
+  - "İlgilenmiyorum": -15 puan
+- Kategori ve etiket düzeyinde hassasiyet
+- Oturum farkındalığı: çeşitliliği sağlamak için son 20 görüntülenen içeriği takip eder
+- Çeşitlilik kontrolü: aynı kategorinin art arda ikiden fazla gösterilmesini engeller
+- Tüm tercih verileri yerel olarak saklanır, hiçbir sunucuya gönderilmez
 
 **Çevrimdışı Önbellekleme**
 - Makaleler anında yükleme için yerel olarak önbelleklenir
@@ -132,10 +154,16 @@ Verileriniz cihazınızdan asla çıkmaz. Tarayıcı verilerinizi temizlerseniz 
 ### Nasıl Çalışır?
 
 1. İlk yüklemede WikiScroll, Wikipedia'dan rastgele makaleler çeker
-2. Makaleler kalite için filtrelenir (taslaklar, anlam ayrımı sayfaları vb. kaldırılır)
+2. Makaleler kalite için filtrelenir (taslaklar, anlam ayrımı sayfaları, sıkıcı konum bilgileri kaldırılır)
 3. İçerik hızlı tüketim için 1-2 cümleye kısaltılır
-4. Kaydırdıkça ve etkileştikçe uygulama tercihlerinizi öğrenir
-5. Gelecekteki içerik, çeşitliliği korurken ilgi alanlarınıza göre ağırlıklandırılır
+4. Kaydırdıkça algoritma her makale için okuma sürenizi takip eder
+5. Hızlı geçişler ilgisizlik, uzun okumalar ilgi sinyali verir
+6. Beğeniler ve kaydetmeler kategori tercihleri için güçlü pozitif sinyal sağlar
+7. "İlgilenmiyorum" butonu açık negatif geri bildirim sağlar (-15 puan)
+8. Öneri motoru, biriken tercihlerinize göre yeni makaleleri puanlar
+9. Zaman azalması, son etkileşimlerin eski olanlardan daha önemli olmasını sağlar
+10. Çeşitlilik faktörü, konfor alanınız dışındaki içerikleri keşfetmenizi sağlar
+11. Tüm makaleler çevrimdışı erişim ve daha hızlı yükleme için yerel olarak önbelleklenir
 
 ### Teknoloji
 
