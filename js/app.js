@@ -10,6 +10,12 @@ const App = {
         this.container = document.getElementById('cardsContainer');
         this.language = Storage.getPreferences().language || 'tr';
         
+        // Clean up any duplicates from previous sessions
+        const removed = Storage.removeDuplicates();
+        if (removed > 0) {
+            console.log(`Cleaned ${removed} duplicate articles from cache`);
+        }
+        
         this.showLoading();
         await this.loadArticles(10);
         this.renderCards();
