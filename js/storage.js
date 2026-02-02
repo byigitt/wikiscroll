@@ -6,7 +6,8 @@ const Storage = {
         PREFERENCES: 'wikiscroll_prefs',
         CATEGORY_SCORES: 'wikiscroll_cat_scores',
         ARTICLE_CACHE: 'wikiscroll_cache',
-        CACHE_TIME: 'wikiscroll_cache_time'
+        CACHE_TIME: 'wikiscroll_cache_time',
+        SAVED: 'wikiscroll_saved'
     },
 
     CACHE_DURATION: 60 * 60 * 1000, // 1 saat
@@ -185,6 +186,37 @@ const Storage = {
     clearCache() {
         localStorage.removeItem(this.KEYS.ARTICLE_CACHE);
         localStorage.removeItem(this.KEYS.CACHE_TIME);
+    },
+
+    // Saved articles
+    getSaved() {
+        return this.get(this.KEYS.SAVED) || [];
+    },
+
+    saveArticle(article) {
+        const saved = this.getSaved();
+        if (!saved.find(a => a.id === article.id)) {
+            saved.unshift({
+                id: article.id,
+                hook: article.hook,
+                emoji: article.emoji,
+                category: article.category,
+                source: article.source,
+                savedAt: Date.now()
+            });
+            this.set(this.KEYS.SAVED, saved);
+        }
+        return saved;
+    },
+
+    unsaveArticle(articleId) {
+        const saved = this.getSaved().filter(a => a.id !== articleId);
+        this.set(this.KEYS.SAVED, saved);
+        return saved;
+    },
+
+    isSaved(articleId) {
+        return this.getSaved().some(a => a.id === articleId);
     },
 
     // Clear all

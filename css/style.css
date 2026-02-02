@@ -263,6 +263,16 @@ html, body {
     opacity: 1;
 }
 
+/* Save button */
+.nav-btn.saved .icon-outline {
+    display: none;
+}
+
+.nav-btn.saved .icon-filled {
+    display: block;
+    opacity: 1;
+}
+
 /* Scroll Hint */
 .scroll-hint {
     position: fixed;
@@ -486,6 +496,113 @@ html, body {
 .modal-links svg {
     width: 18px;
     height: 18px;
+}
+
+/* Saved Modal */
+.modal-saved {
+    max-width: 400px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.modal-close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.modal-close svg {
+    width: 20px;
+    height: 20px;
+    color: var(--text-dim);
+}
+
+.saved-list {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+.saved-empty {
+    text-align: center;
+    color: var(--text-dim);
+    padding: 40px 20px;
+    font-size: 0.9rem;
+}
+
+.saved-item {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.saved-item:last-child {
+    border-bottom: none;
+}
+
+.saved-item:active {
+    background: var(--surface);
+}
+
+.saved-item-emoji {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.saved-item-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.saved-item-text {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.saved-item-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.saved-item-source {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.saved-item-remove {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    transition: color 0.15s;
+}
+
+.saved-item-remove:hover {
+    color: #ef4444;
 }
 
 /* Safe areas */

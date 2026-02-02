@@ -68,19 +68,41 @@ const App = {
                 console.log('Cache miss or not enough unseen articles, fetching from API...');
             }
             
-            // Fetch from API
+            // Fetch from API with retry for duplicates
             console.log('Fetching from API...');
-            const [articles, onThisDay] = await Promise.all([
-                WikiAPI.getRandomArticles(count, this.language),
-                this.facts.length === 0 ? WikiAPI.getOnThisDay(this.language) : Promise.resolve([])
-            ]);
-            
-            // Filter out already seen
             const seen = Storage.getSeen();
             const currentIds = this.facts.map(f => f.id);
-            const newFacts = [...articles, ...onThisDay.slice(0, 2)]
-                .filter(Boolean)
-                .filter(a => !seen.includes(a.id) && !currentIds.includes(a.id));
+            
+            let newFacts = [];
+            let retries = 0;
+            const maxRetries = 5;
+            
+            while (newFacts.length < count && retries < maxRetries) {
+                const [articles, onThisDay] = await Promise.all([
+                    WikiAPI.getRandomArticles(count, this.language),
+                    this.facts.length === 0 && retries === 0 ? WikiAPI.getOnThisDay(this.language) : Promise.resolve([])
+                ]);
+                
+                // Filter out duplicates
+                const filtered = [...articles, ...onThisDay.slice(0, 2)]
+                    .filter(Boolean)
+                    .filter(a => {
+                        const isDuplicate = seen.includes(a.id) || 
+                                           currentIds.includes(a.id) || 
+                                           newFacts.some(f => f.id === a.id);
+                        return !isDuplicate;
+                    });
+                
+                newFacts.push(...filtered);
+                retries++;
+                
+                console.log(`Retry ${retries}: got ${filtered.length} unique, total ${newFacts.length}/${count}`);
+                
+                if (filtered.length > 0) break; // Got some new content, stop retrying
+            }
+            
+            // Trim to requested count
+            newFacts = newFacts.slice(0, count);
             console.log(`Fetched ${newFacts.length} articles from API`);
             
             // Save to cache
@@ -111,9 +133,16 @@ const App = {
     async fetchAndCache(count) {
         // Background fetch for fresh content
         try {
-            const articles = await WikiAPI.getRandomArticles(count, this.language);
-            Storage.addToCache(this.language, articles);
-            console.log(`Cached ${articles.length} new articles in background`);
+            const articles = await WikiAPI.getRandomArticles(count * 2, this.language);
+            // Filter duplicates before caching
+            const existing = Storage.getCache(this.language) || [];
+            const existingIds = existing.map(a => a.id);
+            const unique = articles.filter(a => !existingIds.includes(a.id));
+            
+            if (unique.length > 0) {
+                Storage.addToCache(this.language, unique);
+                console.log(`Cached ${unique.length} new unique articles in background`);
+            }
         } catch (e) {
             console.error('Background fetch failed:', e);
         }
@@ -195,6 +224,11 @@ const App = {
         document.getElementById('infoBtn').addEventListener('click', () => this.showInfoModal());
         document.getElementById('infoClose').addEventListener('click', () => this.hideInfoModal());
 
+        // Save
+        document.getElementById('saveBtn').addEventListener('click', () => this.toggleSave());
+        document.getElementById('savedListBtn').addEventListener('click', () => this.showSavedModal());
+        document.getElementById('savedClose').addEventListener('click', () => this.hideSavedModal());
+
         // Keyboard
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowDown' || e.key === ' ') {
@@ -259,6 +293,7 @@ const App = {
 
     updateCurrentCard() {
         this.updateLikeButton();
+        this.updateSaveButton();
         document.getElementById('scrollHint')?.classList.add('hidden');
     },
 
@@ -368,6 +403,7 @@ const App = {
         
         const isEn = this.language === 'en';
         document.querySelector('#likeBtn .label').textContent = isEn ? 'Like' : 'Beğen';
+        document.querySelector('#saveBtn .label').textContent = isEn ? 'Save' : 'Kaydet';
         document.querySelector('#shareBtn .label').textContent = isEn ? 'Share' : 'Paylaş';
         document.querySelector('#sourceBtn .label').textContent = isEn ? 'Source' : 'Kaynak';
     },
@@ -423,6 +459,86 @@ const App = {
 
     hideInfoModal() {
         document.getElementById('infoModal').classList.remove('active');
+    },
+
+    toggleSave() {
+        const fact = this.getCurrentFact();
+        if (!fact) return;
+        
+        const btn = document.getElementById('saveBtn');
+        const isSaved = Storage.isSaved(fact.id);
+        
+        if (isSaved) {
+            Storage.unsaveArticle(fact.id);
+            btn.classList.remove('saved');
+        } else {
+            Storage.saveArticle(fact);
+            btn.classList.add('saved');
+            this.toast(this.language === 'en' ? 'Saved!' : 'Kaydedildi!');
+        }
+    },
+
+    updateSaveButton() {
+        const fact = this.getCurrentFact();
+        if (!fact) return;
+        
+        const btn = document.getElementById('saveBtn');
+        const isSaved = Storage.isSaved(fact.id);
+        btn.classList.toggle('saved', isSaved);
+    },
+
+    showSavedModal() {
+        const modal = document.getElementById('savedModal');
+        const list = document.getElementById('savedList');
+        const saved = Storage.getSaved();
+        
+        const isEn = this.language === 'en';
+        modal.querySelector('.modal-title').textContent = isEn ? 'Saved' : 'Kaydedilenler';
+        
+        if (saved.length === 0) {
+            list.innerHTML = `<div class="saved-empty">${isEn ? 'No saved items yet' : 'Henüz kayıt yok'}</div>`;
+        } else {
+            list.innerHTML = saved.map(item => `
+                <div class="saved-item" data-id="${item.id}">
+                    <div class="saved-item-emoji">${item.emoji || '💡'}</div>
+                    <div class="saved-item-content">
+                        <div class="saved-item-text">${item.hook}</div>
+                        <div class="saved-item-meta">
+                            <span class="saved-item-source">${item.source?.title || ''}</span>
+                            <button class="saved-item-remove" data-id="${item.id}">${isEn ? 'Remove' : 'Kaldır'}</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Add click handlers
+            list.querySelectorAll('.saved-item').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('saved-item-remove')) return;
+                    const id = el.dataset.id;
+                    const item = saved.find(s => s.id === id);
+                    if (item?.source?.url) {
+                        window.open(item.source.url, '_blank');
+                    }
+                });
+            });
+            
+            list.querySelectorAll('.saved-item-remove').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = btn.dataset.id;
+                    Storage.unsaveArticle(id);
+                    this.showSavedModal(); // Refresh list
+                    this.updateSaveButton();
+                });
+            });
+        }
+        
+        modal.classList.add('active');
+    },
+
+    hideSavedModal() {
+        document.getElementById('savedModal').classList.remove('active');
     }
 };
 

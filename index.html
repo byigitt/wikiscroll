@@ -14,6 +14,11 @@
         <header class="header">
             <div class="logo">wikiscroll<span>.</span></div>
             <div class="header-right">
+                <button class="header-btn" id="savedListBtn" title="Kaydedilenler">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                    </svg>
+                </button>
                 <button class="header-btn" id="infoBtn" title="Hakkında">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                         <circle cx="12" cy="12" r="10"/>
@@ -49,6 +54,15 @@
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                 </svg>
                 <span class="label">Beğen</span>
+            </button>
+            <button class="nav-btn" id="saveBtn">
+                <svg class="icon icon-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                </svg>
+                <svg class="icon icon-filled" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                </svg>
+                <span class="label">Kaydet</span>
             </button>
             <button class="nav-btn" id="shareBtn">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -109,6 +123,24 @@
                 </div>
                 <div class="modal-actions">
                     <button class="modal-btn modal-confirm" id="infoClose">Kapat</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saved Modal -->
+        <div class="modal-overlay" id="savedModal">
+            <div class="modal modal-saved">
+                <div class="modal-header">
+                    <div class="modal-title">Kaydedilenler</div>
+                    <button class="modal-close" id="savedClose">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="saved-list" id="savedList">
+                    <!-- Saved items will be injected here -->
                 </div>
             </div>
         </div>
