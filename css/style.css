@@ -152,9 +152,9 @@ html, body {
 }
 
 .card-thumbnail {
-    width: 140px;
-    height: 140px;
-    border-radius: 12px;
+    width: 200px;
+    height: 200px;
+    border-radius: 16px;
     object-fit: cover;
     margin-bottom: 24px;
     opacity: 0.9;
@@ -332,16 +332,16 @@ html, body {
 /* Tablet */
 @media (min-width: 480px) {
     .card { padding: 90px 32px 130px; }
-    .card-inner { max-width: 440px; }
+    .card-inner { max-width: 480px; }
     .card-fact { font-size: 1.55rem; }
-    .card-thumbnail { width: 160px; height: 160px; }
+    .card-thumbnail { width: 240px; height: 240px; }
 }
 
 /* Desktop */
 @media (min-width: 768px) {
-    .card-inner { max-width: 520px; }
+    .card-inner { max-width: 560px; }
     .card-fact { font-size: 1.75rem; -webkit-line-clamp: 6; }
-    .card-thumbnail { width: 180px; height: 180px; border-radius: 16px; }
+    .card-thumbnail { width: 280px; height: 280px; border-radius: 20px; }
     .nav-btn { padding: 14px 24px; }
     .nav-btn .icon { width: 28px; height: 28px; }
     .scroll-hint { bottom: 140px; }
@@ -436,7 +436,24 @@ html, body {
 
 .modal-info .modal-text {
     text-align: left;
+    margin-bottom: 16px;
+}
+
+.modal-author {
+    font-size: 0.8rem;
+    color: var(--text-dim);
     margin-bottom: 20px;
+}
+
+.modal-author a {
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: opacity 0.15s;
+}
+
+.modal-author a:hover {
+    opacity: 0.7;
 }
 
 .modal-links {

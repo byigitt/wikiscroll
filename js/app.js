@@ -27,28 +27,80 @@ const App = {
         `;
     },
 
-    async loadArticles(count) {
+    async loadArticles(count, forceRefresh = false) {
         if (this.isLoading) return;
         this.isLoading = true;
         
+        console.log('--- loadArticles START ---');
+        console.log('forceRefresh:', forceRefresh);
+        console.log('current facts:', this.facts.length);
+        console.log('language:', this.language);
+        
         try {
+            // Try cache first (only on initial load)
+            if (this.facts.length === 0 && !forceRefresh) {
+                console.log('Checking cache...');
+                const cached = Storage.getCache(this.language);
+                console.log('Cache result:', cached ? `${cached.length} articles` : 'null/expired');
+                
+                if (cached && cached.length >= count) {
+                    const sorted = Recommender.recommend(cached.slice(0, count));
+                    this.facts.push(...sorted);
+                    console.log(`✅ Loaded ${sorted.length} from CACHE. Total: ${this.facts.length}`);
+                    this.isLoading = false;
+                    
+                    // Fetch new in background
+                    this.fetchAndCache(count);
+                    return;
+                } else {
+                    console.log('Cache miss or not enough articles, fetching from API...');
+                }
+            }
+            
+            // Fetch from API
+            console.log('Fetching from API...');
             const [articles, onThisDay] = await Promise.all([
                 WikiAPI.getRandomArticles(count, this.language),
                 this.facts.length === 0 ? WikiAPI.getOnThisDay(this.language) : Promise.resolve([])
             ]);
             
             const newFacts = [...articles, ...onThisDay.slice(0, 2)].filter(Boolean);
+            console.log(`Fetched ${newFacts.length} articles from API`);
+            
+            // Save to cache
+            Storage.addToCache(this.language, newFacts);
+            console.log('Saved to cache');
             
             // Apply recommendation sorting
             const sorted = Recommender.recommend(newFacts);
             this.facts.push(...sorted);
             
-            console.log(`Loaded ${sorted.length} articles. Total: ${this.facts.length}`);
+            console.log(`✅ Loaded ${sorted.length} from API. Total: ${this.facts.length}`);
         } catch (e) {
             console.error('Load failed:', e);
+            
+            // Fallback to cache on error
+            const cached = Storage.getCache(this.language);
+            if (cached && cached.length > 0) {
+                const sorted = Recommender.recommend(cached);
+                this.facts.push(...sorted);
+                console.log('✅ Loaded from cache (fallback)');
+            }
         }
         
         this.isLoading = false;
+        console.log('--- loadArticles END ---');
+    },
+
+    async fetchAndCache(count) {
+        // Background fetch for fresh content
+        try {
+            const articles = await WikiAPI.getRandomArticles(count, this.language);
+            Storage.addToCache(this.language, articles);
+            console.log(`Cached ${articles.length} new articles in background`);
+        } catch (e) {
+            console.error('Background fetch failed:', e);
+        }
     },
 
     renderCards() {
@@ -331,9 +383,9 @@ const App = {
         this.facts = [];
         this.currentIndex = 0;
         
-        // Reload
+        // Reload (force refresh from API)
         this.showLoading();
-        await this.loadArticles(10);
+        await this.loadArticles(10, true);
         this.renderCards();
         
         this.toast(this.language === 'en' ? 'Reset complete' : 'Sıfırlandı');
@@ -347,6 +399,9 @@ const App = {
         modal.querySelector('.modal-text').innerHTML = isEn
             ? 'A TikTok-style scrolling platform that serves random facts from Wikipedia.<br><br>The more you like, the better the algorithm learns your interests.'
             : 'Wikipedia\'dan rastgele bilgiler sunan, TikTok tarzı kaydırmalı bir bilgi platformu.<br><br>Beğendikçe algoritma seni tanır ve ilgi alanlarına göre içerik önerir.';
+        modal.querySelector('.modal-author').innerHTML = isEn
+            ? 'Made by: <a href="https://bayburt.lu" target="_blank" rel="noopener">Barış Bayburtlu</a>'
+            : 'Yapımcı: <a href="https://bayburt.lu" target="_blank" rel="noopener">Barış Bayburtlu</a>';
         modal.querySelector('#infoClose').textContent = isEn ? 'Close' : 'Kapat';
     },
 
