@@ -136,7 +136,7 @@ html, body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 80px 24px 120px;
+    padding: 80px 24px 40px;
 }
 
 .card-inner {
@@ -198,51 +198,58 @@ html, body {
     text-overflow: ellipsis;
 }
 
-.bottom-nav {
+/* Side Navigation (TikTok style) */
+.side-nav {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    right: 16px;
+    bottom: 32px;
     z-index: 100;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     gap: 12px;
-    padding: 20px 20px 28px;
-    background: linear-gradient(to top, var(--bg) 20%, transparent 100%);
+    opacity: 0.5;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.side-nav:hover {
+    opacity: 1;
+}
+
+.side-nav.hidden {
+    opacity: 0;
+    transform: translateX(20px);
+    pointer-events: none;
 }
 
 .nav-btn {
-    background: transparent;
-    border: 1px solid var(--border);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: none;
     color: var(--text);
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
     cursor: pointer;
-    padding: 12px 20px;
-    border-radius: 12px;
-    transition: all 0.15s;
-    font-family: inherit;
+    padding: 14px;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
 }
 
 .nav-btn:active {
-    transform: scale(0.96);
-    background: var(--surface);
+    transform: scale(0.95);
 }
 
 .nav-btn .icon {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
     stroke-linecap: round;
     stroke-linejoin: round;
-    opacity: 0.7;
-}
-
-.nav-btn .label {
-    font-size: 0.6rem;
-    color: var(--text-dim);
-    font-weight: 500;
+    opacity: 0.9;
 }
 
 .nav-btn .icon-filled {
@@ -260,9 +267,18 @@ html, body {
     opacity: 1;
 }
 
+/* Not interested button */
+#notInterestedBtn .icon {
+    opacity: 0.5;
+}
+
+#notInterestedBtn:active .icon {
+    opacity: 0.8;
+}
+
 .scroll-hint {
     position: fixed;
-    bottom: 130px;
+    bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
     color: var(--text-dim);
@@ -324,19 +340,23 @@ html, body {
 }
 
 @media (min-width: 480px) {
-    .card { padding: 90px 32px 130px; }
+    .card { padding: 90px 32px 50px; }
     .card-inner { max-width: 480px; }
     .card-fact { font-size: 1.55rem; }
     .card-thumbnail { width: 240px; height: 240px; }
+    .side-nav { right: 20px; bottom: 40px; gap: 14px; }
+    .nav-btn { padding: 14px; }
+    .nav-btn .icon { width: 24px; height: 24px; }
 }
 
 @media (min-width: 768px) {
+    .card { padding: 90px 40px 50px; }
     .card-inner { max-width: 560px; }
     .card-fact { font-size: 1.75rem; -webkit-line-clamp: 6; }
     .card-thumbnail { width: 280px; height: 280px; border-radius: 20px; }
-    .nav-btn { padding: 14px 24px; }
-    .nav-btn .icon { width: 28px; height: 28px; }
-    .scroll-hint { bottom: 140px; }
+    .side-nav { right: 32px; bottom: 48px; gap: 16px; }
+    .nav-btn { padding: 16px; }
+    .nav-btn .icon { width: 26px; height: 26px; }
 }
 
 .modal-overlay {

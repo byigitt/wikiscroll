@@ -104,10 +104,13 @@ const WikiAPI = {
 
         return {
             id: `wiki-${lang}-${data.pageid || Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            pageId: data.pageid,
             hook: extract,
             emoji: this.categoryEmojis[category] || '💡',
             category,
             tags: this.extractTags(data.title, data.description),
+            wikiCategories: [],
+            relatedTitles: [],
             thumbnail: data.thumbnail?.source || null,
             source: {
                 title: data.title,
@@ -115,6 +118,78 @@ const WikiAPI = {
                 lang
             }
         };
+    },
+
+    async getArticle(title, lang = 'tr') {
+        try {
+            const response = await fetch(`${this.endpoints[lang]}/page/summary/${encodeURIComponent(title)}`);
+            if (!response.ok) return null;
+            return this.formatArticle(await response.json(), lang);
+        } catch {
+            return null;
+        }
+    },
+
+    async getArticleCategories(title, lang = 'tr') {
+        const endpoint = `https://${lang}.wikipedia.org/w/api.php`;
+        const params = new URLSearchParams({
+            action: 'query',
+            titles: title,
+            prop: 'categories',
+            cllimit: '10',
+            clshow: '!hidden',
+            format: 'json',
+            origin: '*'
+        });
+
+        try {
+            const response = await fetch(`${endpoint}?${params}`);
+            const data = await response.json();
+            const page = Object.values(data.query?.pages || {})[0];
+            
+            if (page?.categories) {
+                return page.categories
+                    .map(c => c.title.replace(/^(Kategori|Category):/, '').toLowerCase())
+                    .filter(c => !c.includes('artikel') && !c.includes('stub') && c.length < 50);
+            }
+        } catch (e) {
+            console.error('Failed to fetch categories:', e);
+        }
+        return [];
+    },
+
+    async getRelatedTitles(title, lang = 'tr', limit = 5) {
+        const endpoint = `https://${lang}.wikipedia.org/w/api.php`;
+        const params = new URLSearchParams({
+            action: 'query',
+            titles: title,
+            prop: 'links',
+            pllimit: String(limit * 3),
+            plnamespace: '0',
+            format: 'json',
+            origin: '*'
+        });
+
+        try {
+            const response = await fetch(`${endpoint}?${params}`);
+            const data = await response.json();
+            const page = Object.values(data.query?.pages || {})[0];
+            
+            if (page?.links) {
+                const links = page.links.map(l => l.title);
+                return links.sort(() => Math.random() - 0.5).slice(0, limit);
+            }
+        } catch (e) {
+            console.error('Failed to fetch related:', e);
+        }
+        return [];
+    },
+
+    async getRelatedArticles(titles, lang = 'tr') {
+        const articles = await Promise.all(
+            titles.map(title => this.getArticle(title, lang))
+        );
+        return articles.filter(a => a && this.isInteresting(a.hook, lang));
     },
 
     detectCategory(title, description = '') {

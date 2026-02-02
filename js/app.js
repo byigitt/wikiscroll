@@ -131,6 +131,33 @@ const App = {
             lastTap = Date.now();
         });
 
+        // Long press to hide side nav
+        let pressTimer;
+        const sideNav = document.querySelector('.side-nav');
+        
+        const hideNav = () => sideNav?.classList.add('hidden');
+        const showNav = () => sideNav?.classList.remove('hidden');
+        
+        card.addEventListener('mousedown', () => {
+            pressTimer = setTimeout(hideNav, 150);
+        });
+        card.addEventListener('mouseup', () => {
+            clearTimeout(pressTimer);
+            showNav();
+        });
+        card.addEventListener('mouseleave', () => {
+            clearTimeout(pressTimer);
+            showNav();
+        });
+        
+        card.addEventListener('touchstart', () => {
+            pressTimer = setTimeout(hideNav, 150);
+        }, { passive: true });
+        card.addEventListener('touchend', () => {
+            clearTimeout(pressTimer);
+            showNav();
+        });
+
         this.container.appendChild(card);
     },
 
@@ -152,6 +179,7 @@ const App = {
         document.getElementById('modalConfirm').addEventListener('click', () => this.confirmReset());
         document.getElementById('infoBtn').addEventListener('click', () => this.showInfoModal());
         document.getElementById('infoClose').addEventListener('click', () => this.hideInfoModal());
+        document.getElementById('notInterestedBtn').addEventListener('click', () => this.notInterested());
 
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.addEventListener('click', () => this.switchLanguage(btn.dataset.lang));
@@ -287,8 +315,11 @@ const App = {
     },
 
     openSource() {
-        const url = this.getCurrentFact()?.source?.url;
-        if (url) window.open(url, '_blank');
+        const fact = this.getCurrentFact();
+        if (!fact?.source?.url) return;
+        
+        Recommender.onOpenSource(fact);
+        window.open(fact.source.url, '_blank');
     },
 
     async switchLanguage(lang) {
@@ -310,10 +341,12 @@ const App = {
         });
 
         const isEn = this.language === 'en';
-        document.querySelector('#likeBtn .label').textContent = isEn ? 'Like' : 'Begen';
-        document.querySelector('#saveBtn .label').textContent = isEn ? 'Save' : 'Kaydet';
-        document.querySelector('#shareBtn .label').textContent = isEn ? 'Share' : 'Paylas';
-        document.querySelector('#sourceBtn .label').textContent = isEn ? 'Source' : 'Kaynak';
+        // Update button titles for accessibility
+        document.getElementById('likeBtn').title = isEn ? 'Like' : 'Beğen';
+        document.getElementById('saveBtn').title = isEn ? 'Save' : 'Kaydet';
+        document.getElementById('shareBtn').title = isEn ? 'Share' : 'Paylaş';
+        document.getElementById('sourceBtn').title = isEn ? 'Source' : 'Kaynak';
+        document.getElementById('notInterestedBtn').title = isEn ? 'Not interested' : 'İlgilenmiyorum';
     },
 
     showResetModal() {
@@ -376,6 +409,7 @@ const App = {
             btn.classList.remove('saved');
         } else {
             Storage.saveArticle(fact);
+            Recommender.onSave(fact);
             btn.classList.add('saved');
             this.toast(this.language === 'en' ? 'Saved!' : 'Kaydedildi!');
         }
@@ -434,6 +468,41 @@ const App = {
 
     hideSavedModal() {
         document.getElementById('savedModal').classList.remove('active');
+    },
+
+    notInterested() {
+        const fact = this.getCurrentFact();
+        if (!fact) return;
+
+        // Track negative feedback
+        Recommender.onNotInterested(fact);
+
+        // Remove from current list
+        const currentCard = this.container.querySelectorAll('.card')[this.currentIndex];
+        if (currentCard) {
+            currentCard.style.opacity = '0';
+            currentCard.style.transform = 'translateX(-100%)';
+            currentCard.style.transition = 'all 0.3s ease';
+        }
+
+        // After animation, remove and scroll
+        setTimeout(() => {
+            this.facts.splice(this.currentIndex, 1);
+            this.renderCards();
+            
+            // Scroll to same position
+            if (this.currentIndex >= this.facts.length) {
+                this.currentIndex = Math.max(0, this.facts.length - 1);
+            }
+            this.scrollTo(this.currentIndex);
+            
+            // Load more if needed
+            if (this.facts.length < 5) {
+                this.loadMore();
+            }
+        }, 300);
+
+        this.toast(this.language === 'en' ? 'Got it, showing less like this' : 'Anlaşıldı, benzeri daha az gösterilecek');
     }
 };
 
