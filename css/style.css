@@ -304,6 +304,39 @@ html, body {
 
 .scroll-hint.hidden { display: none; }
 
+.scroll-next-btn {
+    display: none;
+    position: fixed;
+    left: 20px;
+    bottom: 40px;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    align-items: center;
+    justify-content: center;
+}
+
+.scroll-next-btn svg {
+    width: 24px;
+    height: 24px;
+    color: var(--text);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.scroll-next-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.1);
+}
+
+.scroll-next-btn:active {
+    transform: scale(0.95);
+}
+
 .like-burst {
     position: fixed;
     pointer-events: none;
@@ -592,6 +625,7 @@ html, body {
     .side-nav { right: 32px; gap: 14px; }
     .nav-btn { padding: 16px; }
     .nav-btn .icon { width: 26px; height: 26px; }
+    .scroll-next-btn { display: flex; }
 }
 
 @supports (padding-bottom: env(safe-area-inset-bottom)) {

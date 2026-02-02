@@ -169,6 +169,7 @@ const App = {
         document.getElementById('infoBtn').addEventListener('click', () => this.showInfoModal());
         document.getElementById('infoClose').addEventListener('click', () => this.hideInfoModal());
         document.getElementById('notInterestedBtn').addEventListener('click', () => this.notInterested());
+        document.getElementById('scrollNextBtn').addEventListener('click', () => this.scrollTo(this.currentIndex + 1));
 
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.addEventListener('click', () => this.switchLanguage(btn.dataset.lang));
