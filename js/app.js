@@ -27,7 +27,6 @@ const App = {
         try {
             if (this.facts.length === 0 && !forceRefresh) {
                 const cached = Storage.getCache(this.language);
-
                 if (cached && cached.length > 0) {
                     const seen = Storage.getSeen();
                     const unseen = cached.filter(a => !seen.includes(a.id));
@@ -123,6 +122,11 @@ const App = {
             </div>
         `;
 
+        this.setupCardInteractions(card);
+        this.container.appendChild(card);
+    },
+
+    setupCardInteractions(card) {
         let lastTap = 0;
         card.addEventListener('click', (e) => {
             if (Date.now() - lastTap < 300) {
@@ -131,34 +135,19 @@ const App = {
             lastTap = Date.now();
         });
 
-        // Long press to hide side nav
         let pressTimer;
         const sideNav = document.querySelector('.side-nav');
-        
         const hideNav = () => sideNav?.classList.add('hidden');
         const showNav = () => sideNav?.classList.remove('hidden');
-        
-        card.addEventListener('mousedown', () => {
-            pressTimer = setTimeout(hideNav, 150);
-        });
-        card.addEventListener('mouseup', () => {
-            clearTimeout(pressTimer);
-            showNav();
-        });
-        card.addEventListener('mouseleave', () => {
-            clearTimeout(pressTimer);
-            showNav();
-        });
-        
-        card.addEventListener('touchstart', () => {
-            pressTimer = setTimeout(hideNav, 150);
-        }, { passive: true });
-        card.addEventListener('touchend', () => {
-            clearTimeout(pressTimer);
-            showNav();
-        });
 
-        this.container.appendChild(card);
+        const startPress = () => { pressTimer = setTimeout(hideNav, 150); };
+        const endPress = () => { clearTimeout(pressTimer); showNav(); };
+
+        card.addEventListener('mousedown', startPress);
+        card.addEventListener('mouseup', endPress);
+        card.addEventListener('mouseleave', endPress);
+        card.addEventListener('touchstart', startPress, { passive: true });
+        card.addEventListener('touchend', endPress);
     },
 
     setupEvents() {
@@ -248,8 +237,9 @@ const App = {
         if (!fact) return;
 
         const btn = document.getElementById('likeBtn');
+        const isLiked = Storage.isLiked(fact.id);
 
-        if (Storage.isLiked(fact.id)) {
+        if (isLiked) {
             Recommender.onUnlike(fact);
             btn.classList.remove('liked');
         } else {
@@ -264,8 +254,9 @@ const App = {
         if (!fact) return;
 
         const btn = document.getElementById('likeBtn');
+        const isLiked = Storage.isLiked(fact.id);
 
-        if (Storage.isLiked(fact.id)) {
+        if (isLiked) {
             Recommender.onUnlike(fact);
             btn.classList.remove('liked');
         } else {
@@ -317,7 +308,7 @@ const App = {
     openSource() {
         const fact = this.getCurrentFact();
         if (!fact?.source?.url) return;
-        
+
         Recommender.onOpenSource(fact);
         window.open(fact.source.url, '_blank');
     },
@@ -341,12 +332,11 @@ const App = {
         });
 
         const isEn = this.language === 'en';
-        // Update button titles for accessibility
-        document.getElementById('likeBtn').title = isEn ? 'Like' : 'Beğen';
-        document.getElementById('saveBtn').title = isEn ? 'Save' : 'Kaydet';
-        document.getElementById('shareBtn').title = isEn ? 'Share' : 'Paylaş';
-        document.getElementById('sourceBtn').title = isEn ? 'Source' : 'Kaynak';
-        document.getElementById('notInterestedBtn').title = isEn ? 'Not interested' : 'İlgilenmiyorum';
+        document.getElementById('likeBtn').dataset.tooltip = isEn ? 'Like' : 'Beğen';
+        document.getElementById('saveBtn').dataset.tooltip = isEn ? 'Save' : 'Kaydet';
+        document.getElementById('shareBtn').dataset.tooltip = isEn ? 'Share' : 'Paylaş';
+        document.getElementById('sourceBtn').dataset.tooltip = isEn ? 'Source' : 'Kaynak';
+        document.getElementById('notInterestedBtn').dataset.tooltip = isEn ? 'Not interested' : 'İlgilenmiyorum';
     },
 
     showResetModal() {
@@ -474,10 +464,8 @@ const App = {
         const fact = this.getCurrentFact();
         if (!fact) return;
 
-        // Track negative feedback
         Recommender.onNotInterested(fact);
 
-        // Remove from current list
         const currentCard = this.container.querySelectorAll('.card')[this.currentIndex];
         if (currentCard) {
             currentCard.style.opacity = '0';
@@ -485,24 +473,21 @@ const App = {
             currentCard.style.transition = 'all 0.3s ease';
         }
 
-        // After animation, remove and scroll
         setTimeout(() => {
             this.facts.splice(this.currentIndex, 1);
             this.renderCards();
-            
-            // Scroll to same position
+
             if (this.currentIndex >= this.facts.length) {
                 this.currentIndex = Math.max(0, this.facts.length - 1);
             }
             this.scrollTo(this.currentIndex);
-            
-            // Load more if needed
+
             if (this.facts.length < 5) {
                 this.loadMore();
             }
         }, 300);
 
-        this.toast(this.language === 'en' ? 'Got it, showing less like this' : 'Anlaşıldı, benzeri daha az gösterilecek');
+        this.toast(this.language === 'en' ? 'Got it, showing less like this' : 'Anlasildi, benzeri daha az gosterilecek');
     }
 };
 

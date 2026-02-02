@@ -1,4 +1,4 @@
-# WikiScroll
+# wikiscroll.
 
 [English](#english) | [Türkçe](#türkçe)
 
@@ -10,7 +10,7 @@ A TikTok-style scrolling platform that delivers random facts from Wikipedia. Des
 
 ### What is it?
 
-WikiScroll transforms Wikipedia content into bite-sized, scrollable facts. Instead of doom-scrolling through social media, you scroll through knowledge. Each card presents a concise piece of information sourced directly from Wikipedia.
+wikiscroll. transforms Wikipedia content into bite-sized, scrollable facts. Instead of doom-scrolling through social media, you scroll through knowledge. Each card presents a concise piece of information sourced directly from Wikipedia.
 
 ### Features
 
@@ -43,7 +43,7 @@ WikiScroll transforms Wikipedia content into bite-sized, scrollable facts. Inste
 
 ### Privacy
 
-WikiScroll takes a privacy-first approach:
+wikiscroll. takes a privacy-first approach:
 
 - **No accounts required** - Just open and start scrolling
 - **No tracking** - We don't collect any personal data
@@ -56,7 +56,7 @@ Your data never leaves your device. If you clear your browser data, everything r
 
 ### How It Works
 
-1. On first load, WikiScroll fetches random articles from Wikipedia
+1. On first load, wikiscroll. fetches random articles from Wikipedia
 2. Articles are filtered for quality (removes stubs, disambiguation pages, boring location entries)
 3. Content is trimmed to 1-2 sentences for quick consumption
 4. As you scroll, the algorithm tracks your reading time per article
@@ -107,7 +107,7 @@ Wikipedia'dan rastgele bilgiler sunan, TikTok tarzı dikey kaydırmalı bir plat
 
 ### Nedir?
 
-WikiScroll, Wikipedia içeriklerini kısa ve kaydırmalı bilgi kartlarına dönüştürür. Sosyal medyada vakit öldürme yerine, bilgi akışında gezinirsiniz. Her kart, doğrudan Wikipedia'dan alınan özlü bir bilgi sunar.
+wikiscroll., Wikipedia içeriklerini kısa ve kaydırmalı bilgi kartlarına dönüştürür. Sosyal medyada vakit öldürme yerine, bilgi akışında gezinirsiniz. Her kart, doğrudan Wikipedia'dan alınan özlü bir bilgi sunar.
 
 ### Özellikler
 
@@ -140,7 +140,7 @@ WikiScroll, Wikipedia içeriklerini kısa ve kaydırmalı bilgi kartlarına dön
 
 ### Gizlilik
 
-WikiScroll, gizlilik öncelikli bir yaklaşım benimser:
+wikiscroll., gizlilik öncelikli bir yaklaşım benimser:
 
 - **Hesap gerektirmez** - Sadece açın ve kaydırmaya başlayın
 - **Takip yok** - Hiçbir kişisel veri toplamıyoruz
@@ -153,7 +153,7 @@ Verileriniz cihazınızdan asla çıkmaz. Tarayıcı verilerinizi temizlerseniz 
 
 ### Nasıl Çalışır?
 
-1. İlk yüklemede WikiScroll, Wikipedia'dan rastgele makaleler çeker
+1. İlk yüklemede wikiscroll., Wikipedia'dan rastgele makaleler çeker
 2. Makaleler kalite için filtrelenir (taslaklar, anlam ayrımı sayfaları, sıkıcı konum bilgileri kaldırılır)
 3. İçerik hızlı tüketim için 1-2 cümleye kısaltılır
 4. Kaydırdıkça algoritma her makale için okuma sürenizi takip eder

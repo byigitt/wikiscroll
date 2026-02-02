@@ -36,11 +36,16 @@ const WikiAPI = {
         return !patterns.some(pattern => pattern.test(text));
     },
 
+    async fetchJson(url) {
+        const response = await fetch(url);
+        if (!response.ok) return null;
+        return response.json();
+    },
+
     async getRandomSummary(lang = 'tr') {
         try {
-            const response = await fetch(`${this.endpoints[lang]}/page/random/summary`);
-            if (!response.ok) return null;
-            return this.formatArticle(await response.json(), lang);
+            const data = await this.fetchJson(`${this.endpoints[lang]}/page/random/summary`);
+            return this.formatArticle(data, lang);
         } catch {
             return null;
         }
@@ -62,11 +67,8 @@ const WikiAPI = {
         const day = String(now.getDate()).padStart(2, '0');
 
         try {
-            const response = await fetch(`${this.endpoints[lang]}/feed/onthisday/events/${month}/${day}`);
-            if (!response.ok) return [];
-
-            const data = await response.json();
-            if (!data.events) return [];
+            const data = await this.fetchJson(`${this.endpoints[lang]}/feed/onthisday/events/${month}/${day}`);
+            if (!data?.events) return [];
 
             return data.events
                 .filter(e => e.text && e.text.length > 30)
@@ -122,73 +124,62 @@ const WikiAPI = {
 
     async getArticle(title, lang = 'tr') {
         try {
-            const response = await fetch(`${this.endpoints[lang]}/page/summary/${encodeURIComponent(title)}`);
-            if (!response.ok) return null;
-            return this.formatArticle(await response.json(), lang);
+            const data = await this.fetchJson(`${this.endpoints[lang]}/page/summary/${encodeURIComponent(title)}`);
+            return this.formatArticle(data, lang);
         } catch {
             return null;
         }
     },
 
-    async getArticleCategories(title, lang = 'tr') {
+    buildWikiApiUrl(lang, params) {
         const endpoint = `https://${lang}.wikipedia.org/w/api.php`;
-        const params = new URLSearchParams({
+        return `${endpoint}?${new URLSearchParams({ ...params, format: 'json', origin: '*' })}`;
+    },
+
+    async getArticleCategories(title, lang = 'tr') {
+        const url = this.buildWikiApiUrl(lang, {
             action: 'query',
             titles: title,
             prop: 'categories',
             cllimit: '10',
-            clshow: '!hidden',
-            format: 'json',
-            origin: '*'
+            clshow: '!hidden'
         });
 
         try {
-            const response = await fetch(`${endpoint}?${params}`);
-            const data = await response.json();
-            const page = Object.values(data.query?.pages || {})[0];
-            
+            const data = await this.fetchJson(url);
+            const page = Object.values(data?.query?.pages || {})[0];
+
             if (page?.categories) {
                 return page.categories
                     .map(c => c.title.replace(/^(Kategori|Category):/, '').toLowerCase())
                     .filter(c => !c.includes('artikel') && !c.includes('stub') && c.length < 50);
             }
-        } catch (e) {
-            console.error('Failed to fetch categories:', e);
-        }
+        } catch {}
         return [];
     },
 
     async getRelatedTitles(title, lang = 'tr', limit = 5) {
-        const endpoint = `https://${lang}.wikipedia.org/w/api.php`;
-        const params = new URLSearchParams({
+        const url = this.buildWikiApiUrl(lang, {
             action: 'query',
             titles: title,
             prop: 'links',
             pllimit: String(limit * 3),
-            plnamespace: '0',
-            format: 'json',
-            origin: '*'
+            plnamespace: '0'
         });
 
         try {
-            const response = await fetch(`${endpoint}?${params}`);
-            const data = await response.json();
-            const page = Object.values(data.query?.pages || {})[0];
-            
+            const data = await this.fetchJson(url);
+            const page = Object.values(data?.query?.pages || {})[0];
+
             if (page?.links) {
-                const links = page.links.map(l => l.title);
-                return links.sort(() => Math.random() - 0.5).slice(0, limit);
+                return page.links.map(l => l.title).sort(() => Math.random() - 0.5).slice(0, limit);
             }
-        } catch (e) {
-            console.error('Failed to fetch related:', e);
-        }
+        } catch {}
         return [];
     },
 
     async getRelatedArticles(titles, lang = 'tr') {
-        const articles = await Promise.all(
-            titles.map(title => this.getArticle(title, lang))
-        );
+        const articles = await Promise.all(titles.map(title => this.getArticle(title, lang)));
         return articles.filter(a => a && this.isInteresting(a.hook, lang));
     },
 

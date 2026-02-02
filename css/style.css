@@ -25,9 +25,7 @@ html, body {
 }
 
 @supports (font-variation-settings: normal) {
-    html, body {
-        font-family: 'Inter var', sans-serif;
-    }
+    html, body { font-family: 'Inter var', sans-serif; }
 }
 
 #app {
@@ -55,9 +53,7 @@ html, body {
     letter-spacing: -0.03em;
 }
 
-.logo span {
-    opacity: 0.4;
-}
+.logo span { opacity: 0.4; }
 
 .header-right {
     display: flex;
@@ -123,9 +119,7 @@ html, body {
     overscroll-behavior: contain;
 }
 
-.cards-container::-webkit-scrollbar {
-    display: none;
-}
+.cards-container::-webkit-scrollbar { display: none; }
 
 .card {
     height: 100vh;
@@ -163,9 +157,7 @@ html, body {
     opacity: 0.9;
 }
 
-.card-inner:has(.card-thumbnail) .card-emoji {
-    display: none;
-}
+.card-inner:has(.card-thumbnail) .card-emoji { display: none; }
 
 .card-category {
     font-size: 0.65rem;
@@ -177,8 +169,8 @@ html, body {
 }
 
 .card-fact {
-    font-size: 1.4rem;
-    line-height: 1.65;
+    font-size: 1.55rem;
+    line-height: 1.6;
     font-weight: 400;
     letter-spacing: -0.01em;
     margin-bottom: 20px;
@@ -198,7 +190,6 @@ html, body {
     text-overflow: ellipsis;
 }
 
-/* Side Navigation (TikTok style) */
 .side-nav {
     position: fixed;
     right: 16px;
@@ -211,9 +202,7 @@ html, body {
     transition: opacity 0.2s, transform 0.2s;
 }
 
-.side-nav:hover {
-    opacity: 1;
-}
+.side-nav:hover { opacity: 1; }
 
 .side-nav.hidden {
     opacity: 0;
@@ -233,6 +222,7 @@ html, body {
     padding: 14px;
     border-radius: 50%;
     transition: all 0.2s;
+    position: relative;
 }
 
 .nav-btn:hover {
@@ -240,9 +230,7 @@ html, body {
     transform: scale(1.1);
 }
 
-.nav-btn:active {
-    transform: scale(0.95);
-}
+.nav-btn:active { transform: scale(0.95); }
 
 .nav-btn .icon {
     width: 24px;
@@ -252,14 +240,37 @@ html, body {
     opacity: 0.9;
 }
 
-.nav-btn .icon-filled {
-    display: none;
+/* Tooltip */
+.nav-btn::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-right: 12px;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    color: var(--text);
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    border-radius: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.15s;
+    pointer-events: none;
 }
 
-.nav-btn.liked .icon-outline,
-.nav-btn.saved .icon-outline {
-    display: none;
+.nav-btn:hover::before {
+    opacity: 1;
+    visibility: visible;
 }
+
+.nav-btn .icon-filled { display: none; }
+
+.nav-btn.liked .icon-outline,
+.nav-btn.saved .icon-outline { display: none; }
 
 .nav-btn.liked .icon-filled,
 .nav-btn.saved .icon-filled {
@@ -267,14 +278,8 @@ html, body {
     opacity: 1;
 }
 
-/* Not interested button */
-#notInterestedBtn .icon {
-    opacity: 0.5;
-}
-
-#notInterestedBtn:active .icon {
-    opacity: 0.8;
-}
+#notInterestedBtn .icon { opacity: 0.5; }
+#notInterestedBtn:active .icon { opacity: 0.8; }
 
 .scroll-hint {
     position: fixed;
@@ -295,9 +300,7 @@ html, body {
     50% { opacity: 0.2; }
 }
 
-.scroll-hint.hidden {
-    display: none;
-}
+.scroll-hint.hidden { display: none; }
 
 .like-burst {
     position: fixed;
@@ -335,29 +338,7 @@ html, body {
     animation: spin 0.8s linear infinite;
 }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-@media (min-width: 480px) {
-    .card { padding: 90px 32px 50px; }
-    .card-inner { max-width: 480px; }
-    .card-fact { font-size: 1.55rem; }
-    .card-thumbnail { width: 240px; height: 240px; }
-    .side-nav { right: 20px; bottom: 40px; gap: 14px; }
-    .nav-btn { padding: 14px; }
-    .nav-btn .icon { width: 24px; height: 24px; }
-}
-
-@media (min-width: 768px) {
-    .card { padding: 90px 40px 50px; }
-    .card-inner { max-width: 560px; }
-    .card-fact { font-size: 1.75rem; -webkit-line-clamp: 6; }
-    .card-thumbnail { width: 280px; height: 280px; border-radius: 20px; }
-    .side-nav { right: 32px; bottom: 48px; gap: 16px; }
-    .nav-btn { padding: 16px; }
-    .nav-btn .icon { width: 26px; height: 26px; }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 .modal-overlay {
     position: fixed;
@@ -390,9 +371,7 @@ html, body {
     transition: transform 0.2s ease;
 }
 
-.modal-overlay.active .modal {
-    transform: scale(1);
-}
+.modal-overlay.active .modal { transform: scale(1); }
 
 .modal-title {
     font-size: 1rem;
@@ -435,9 +414,7 @@ html, body {
     color: var(--bg);
 }
 
-.modal-btn:active {
-    transform: scale(0.97);
-}
+.modal-btn:active { transform: scale(0.97); }
 
 .modal-info .modal-title {
     font-size: 1.25rem;
@@ -462,9 +439,7 @@ html, body {
     transition: opacity 0.15s;
 }
 
-.modal-author a:hover {
-    opacity: 0.7;
-}
+.modal-author a:hover { opacity: 0.7; }
 
 .modal-links {
     display: flex;
@@ -547,13 +522,8 @@ html, body {
     transition: background 0.15s;
 }
 
-.saved-item:last-child {
-    border-bottom: none;
-}
-
-.saved-item:active {
-    background: var(--surface);
-}
+.saved-item:last-child { border-bottom: none; }
+.saved-item:active { background: var(--surface); }
 
 .saved-item-emoji {
     font-size: 1.5rem;
@@ -600,8 +570,26 @@ html, body {
     transition: color 0.15s;
 }
 
-.saved-item-remove:hover {
-    color: #ef4444;
+.saved-item-remove:hover { color: #ef4444; }
+
+@media (min-width: 480px) {
+    .card { padding: 90px 32px 50px; }
+    .card-inner { max-width: 500px; }
+    .card-fact { font-size: 1.7rem; }
+    .card-thumbnail { width: 240px; height: 240px; }
+    .side-nav { right: 20px; bottom: 40px; gap: 14px; }
+    .nav-btn { padding: 14px; }
+    .nav-btn .icon { width: 24px; height: 24px; }
+}
+
+@media (min-width: 768px) {
+    .card { padding: 90px 40px 50px; }
+    .card-inner { max-width: 600px; }
+    .card-fact { font-size: 1.9rem; -webkit-line-clamp: 6; }
+    .card-thumbnail { width: 280px; height: 280px; border-radius: 20px; }
+    .side-nav { right: 32px; bottom: 48px; gap: 16px; }
+    .nav-btn { padding: 16px; }
+    .nav-btn .icon { width: 26px; height: 26px; }
 }
 
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
