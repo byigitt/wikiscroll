@@ -9,6 +9,7 @@ const Recommender = {
         SHORT_READ: -1,
         SKIP: -2,
         SAVE: 8,
+        UNSAVE: -4,
         NOT_INTERESTED: -15,
         RELATED_BOOST: 5
     },
@@ -130,18 +131,18 @@ const Recommender = {
         }
     },
 
-    updateTagScores(article, multiplier) {
+    updateTagScores(article, baseWeight, multiplier) {
         if (article.tags) {
             article.tags.forEach(tag => {
-                this.updateScore(tag, this.WEIGHTS.LIKE * multiplier);
+                this.updateScore(tag, baseWeight * multiplier);
             });
         }
     },
 
-    updateWikiCategoryScores(article, multiplier) {
+    updateWikiCategoryScores(article, baseWeight, multiplier) {
         if (article.wikiCategories) {
             article.wikiCategories.forEach(cat => {
-                this.updateScore(cat, this.WEIGHTS.LIKE * multiplier);
+                this.updateScore(cat, baseWeight * multiplier);
             });
         }
     },
@@ -149,28 +150,28 @@ const Recommender = {
     onLike(article) {
         Storage.addLike(article.id);
         this.updateScore(article.category, this.WEIGHTS.LIKE);
-        this.updateTagScores(article, 0.5);
-        this.updateWikiCategoryScores(article, 0.3);
+        this.updateTagScores(article, this.WEIGHTS.LIKE, 0.5);
+        this.updateWikiCategoryScores(article, this.WEIGHTS.LIKE, 0.3);
     },
 
     onUnlike(article) {
         Storage.removeLike(article.id);
         this.updateScore(article.category, this.WEIGHTS.UNLIKE);
+        this.updateTagScores(article, this.WEIGHTS.UNLIKE, 0.5);
+        this.updateWikiCategoryScores(article, this.WEIGHTS.UNLIKE, 0.3);
     },
 
     onSave(article) {
         this.updateScore(article.category, this.WEIGHTS.SAVE);
     },
 
+    onUnsave(article) {
+        this.updateScore(article.category, this.WEIGHTS.UNSAVE);
+    },
+
     onNotInterested(article) {
         this.updateScore(article.category, this.WEIGHTS.NOT_INTERESTED);
-
-        if (article.tags) {
-            article.tags.forEach(tag => {
-                this.updateScore(tag, this.WEIGHTS.NOT_INTERESTED * 0.5);
-            });
-        }
-
+        this.updateTagScores(article, this.WEIGHTS.NOT_INTERESTED, 0.5);
         Storage.markSeen(article.id);
     },
 
@@ -189,12 +190,7 @@ const Recommender = {
 
     onOpenSource(article) {
         this.updateScore(article.category, this.WEIGHTS.SAVE);
-
-        if (article.tags) {
-            article.tags.forEach(tag => {
-                this.updateScore(tag, this.WEIGHTS.LONG_READ);
-            });
-        }
+        this.updateTagScores(article, this.WEIGHTS.LONG_READ, 1);
     },
 
     getRelatedArticles(article) {

@@ -396,6 +396,7 @@ const App = {
 
         if (Storage.isSaved(fact.id)) {
             Storage.unsaveArticle(fact.id);
+            Recommender.onUnsave(fact);
             btn.classList.remove('saved');
         } else {
             Storage.saveArticle(fact);
@@ -446,7 +447,9 @@ const App = {
             list.querySelectorAll('.saved-item-remove').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    const item = saved.find(s => s.id === btn.dataset.id);
                     Storage.unsaveArticle(btn.dataset.id);
+                    if (item) Recommender.onUnsave(item);
                     this.showSavedModal();
                     this.updateSaveButton();
                 });
