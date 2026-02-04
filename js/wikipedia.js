@@ -18,7 +18,13 @@ const WikiAPI = {
         ],
         en: [
             /is a village/i, /is a town/i, /is a municipality/i, /is a commune/i,
-            /census-designated place/i, /unincorporated community/i, /administrative unit/i
+            /is a city in/i, /is a district of/i, /is a county in/i,
+            /is a hamlet/i, /is a parish/i, /is a borough/i,
+            /is a settlement/i, /is a locality/i, /is a neighborhood/i,
+            /is a populated place/i, /is a subdivision/i,
+            /census-designated place/i, /unincorporated community/i, /administrative unit/i,
+            /had a population of/i, /according to the \d+ census/i,
+            /is located in the/i, /is situated in/i
         ]
     },
 
