@@ -6,8 +6,15 @@ const WikiAPI = {
 
     boringPatterns: {
         tr: [
-            /ilcesine bagli/i, /bir mahalledir/i, /bir koydur/i, /bir belediyedir/i,
-            /nufusu \d+ kisidir/i, /\d+ yilinda kurulmustur/i, /bir yerlesim yeridir/i, /idari birim/i
+            /ilçesine bağlı/i, /ilcesine bagli/i,
+            /bir mahalledir/i, /bir köydür/i, /bir koydur/i,
+            /bir belediyedir/i, /bir bucağıdır/i,
+            /nüfusu \d+ kişidir/i, /nufusu \d+ kisidir/i,
+            /\d+ yılında kurulmuştur/i, /\d+ yilinda kurulmustur/i,
+            /bir yerleşim yeridir/i, /bir yerlesim yeridir/i,
+            /idari birim/i, /İdari birim/i,
+            /bir semttir/i, /bir nahiyedir/i,
+            /bağlı bir köy/i, /bagli bir koy/i
         ],
         en: [
             /is a village/i, /is a town/i, /is a municipality/i, /is a commune/i,
@@ -16,12 +23,12 @@ const WikiAPI = {
     },
 
     categoryPatterns: {
-        bilim: /fizik|kimya|biyoloji|bilim|atom|molekul|enerji|uzay|gezegen|yildiz|science|physics|chemistry|biology|planet|star|quantum/,
-        tarih: /savas|tarih|imparator|kral|antik|osmanli|war|history|emperor|king|ancient|battle|dynasty|empire/,
-        doga: /hayvan|bitki|deniz|orman|kus|balik|tur|species|animal|plant|forest|ocean|bird|fish|mammal/,
-        teknoloji: /bilgisayar|yazilim|internet|teknoloji|muhendis|computer|software|technology|digital|engineer|algorithm/,
-        kultur: /sanat|muzik|film|yazar|edebiyat|roman|sarki|art|music|film|author|literature|novel|song|album/,
-        insan: /futbolcu|oyuncu|aktor|sarkici|bilim insani|footballer|actor|singer|scientist|politician|athlete/
+        bilim: /fizik|kimya|biyoloji|bilim|atom|molekül|molekul|enerji|uzay|gezegen|yıldız|yildiz|science|physics|chemistry|biology|planet|star|quantum/i,
+        tarih: /savaş|savas|tarih|imparator|kral|antik|osmanlı|osmanli|war|history|emperor|king|ancient|battle|dynasty|empire/i,
+        doga: /hayvan|bitki|deniz|orman|kuş|kus|balık|balik|tür|tur|species|animal|plant|forest|ocean|bird|fish|mammal/i,
+        teknoloji: /bilgisayar|yazılım|yazilim|internet|teknoloji|mühendis|muhendis|computer|software|technology|digital|engineer|algorithm/i,
+        kultur: /sanat|müzik|muzik|film|yazar|edebiyat|roman|şarkı|sarki|art|music|film|author|literature|novel|song|album/i,
+        insan: /futbolcu|oyuncu|aktör|aktor|şarkıcı|sarkici|bilim insanı|bilim insani|footballer|actor|singer|scientist|politician|athlete/i
     },
 
     categoryEmojis: {
