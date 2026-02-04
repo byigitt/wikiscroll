@@ -5,6 +5,49 @@ const App = {
     isLoading: false,
     language: 'tr',
 
+    translations: {
+        tr: {
+            categories: {
+                bilim: '🔬 Bilim', tarih: '📜 Tarih', doga: '🌿 Doğa',
+                kultur: '🎭 Kültür', teknoloji: '💻 Teknoloji', insan: '👤 İnsan'
+            },
+            tooltips: {
+                like: 'Beğen', save: 'Kaydet', share: 'Paylaş',
+                source: 'Kaynak', notInterested: 'İlgilenmiyorum'
+            },
+            headerTitles: {
+                saved: 'Kaydedilenler', about: 'Hakkında', reset: 'Sıfırla'
+            },
+            scrollHint: '↑ Kaydır',
+            copied: 'Kopyalandı!'
+        },
+        en: {
+            categories: {
+                bilim: '🔬 Science', tarih: '📜 History', doga: '🌿 Nature',
+                kultur: '🎭 Culture', teknoloji: '💻 Technology', insan: '👤 People'
+            },
+            tooltips: {
+                like: 'Like', save: 'Save', share: 'Share',
+                source: 'Source', notInterested: 'Not interested'
+            },
+            headerTitles: {
+                saved: 'Saved', about: 'About', reset: 'Reset'
+            },
+            scrollHint: '↑ Scroll',
+            copied: 'Copied!'
+        }
+    },
+
+    t(key) {
+        const lang = this.translations[this.language] || this.translations.tr;
+        const keys = key.split('.');
+        let val = lang;
+        for (const k of keys) {
+            val = val?.[k];
+        }
+        return val || key;
+    },
+
     async init() {
         this.container = document.getElementById('cardsContainer');
         this.language = Storage.getPreferences().language || 'tr';
@@ -103,10 +146,7 @@ const App = {
         card.dataset.index = index;
         card.dataset.category = fact.category || 'kultur';
 
-        const labels = {
-            bilim: '🔬 Bilim', tarih: '📜 Tarih', doga: '🌿 Doga',
-            kultur: '🎭 Kultur', teknoloji: '💻 Teknoloji', insan: '👤 Insan'
-        };
+        const labels = this.t('categories');
 
         const thumbnail = fact.thumbnail
             ? `<img src="${fact.thumbnail}" class="card-thumbnail" alt="" onerror="this.parentElement.parentElement.querySelector('.card-bg')?.remove(); this.remove()">`
@@ -298,7 +338,7 @@ const App = {
             navigator.share({ text, url });
         } else {
             navigator.clipboard.writeText(`${text}\n\n${url}`);
-            this.toast('Kopyalandi!');
+            this.toast(this.t('copied'));
         }
     },
 
@@ -336,12 +376,24 @@ const App = {
             btn.classList.toggle('active', btn.dataset.lang === this.language);
         });
 
-        const isEn = this.language === 'en';
-        document.getElementById('likeBtn').dataset.tooltip = isEn ? 'Like' : 'Beğen';
-        document.getElementById('saveBtn').dataset.tooltip = isEn ? 'Save' : 'Kaydet';
-        document.getElementById('shareBtn').dataset.tooltip = isEn ? 'Share' : 'Paylaş';
-        document.getElementById('sourceBtn').dataset.tooltip = isEn ? 'Source' : 'Kaynak';
-        document.getElementById('notInterestedBtn').dataset.tooltip = isEn ? 'Not interested' : 'İlgilenmiyorum';
+        document.documentElement.lang = this.language;
+
+        const tooltips = this.t('tooltips');
+        document.getElementById('likeBtn').dataset.tooltip = tooltips.like;
+        document.getElementById('saveBtn').dataset.tooltip = tooltips.save;
+        document.getElementById('shareBtn').dataset.tooltip = tooltips.share;
+        document.getElementById('sourceBtn').dataset.tooltip = tooltips.source;
+        document.getElementById('notInterestedBtn').dataset.tooltip = tooltips.notInterested;
+
+        const headerTitles = this.t('headerTitles');
+        document.getElementById('savedListBtn').title = headerTitles.saved;
+        document.getElementById('infoBtn').title = headerTitles.about;
+        document.getElementById('resetBtn').title = headerTitles.reset;
+
+        const scrollHint = document.getElementById('scrollHint');
+        if (scrollHint) {
+            scrollHint.querySelector('span').textContent = this.t('scrollHint');
+        }
     },
 
     showResetModal() {
